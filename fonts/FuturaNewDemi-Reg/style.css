@@ -1,0 +1,10 @@
+/* font converted using font-converter.net. thank you! */
+@font-face {
+  font-family: "FuturaNewDemi-Reg";
+
+  src: url("./fonts/FuturaNewDemi-Reg.svg") format("svg"), /* Legacy iOS */
+    url("./fonts/FuturaNewDemi-Reg.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/FuturaNewDemi-Reg.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: normal;
+}
