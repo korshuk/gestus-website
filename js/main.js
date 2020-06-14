@@ -45,7 +45,7 @@ $(function () {
     let windoHeight;
     $window.on('resize', onWindowResize);
 
-    $document.on('mousewheel', '#indexMenu', /* '.index-menu-container'*/ onIndexMenuScroll);
+    $document.on('mousewheel', '.index-menu-container', onIndexMenuScroll);
     $document.on('mousewheel', '.main-menu', onMainMenuScroll);
     $document.on('mousewheel', '.agibalov-portfolio-menu', onPortfolioMenuScroll);
 
@@ -311,7 +311,7 @@ $(function () {
         direction = deltaX / Math.abs(deltaX);
         indexMenuIsAnimating = true;
 
-        console.log('111', direction)
+        console.log('111', e)
 
         $indexMenuList.each(function (i, element) {
             const $element = $(element);
