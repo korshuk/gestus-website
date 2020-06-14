@@ -10,6 +10,8 @@ $(function () {
     const $mainMenuContainer = $('.main-menu-nav'); // $('#mainMenuContainer');
     const $mainMenuItems = $('.main-menu-list-item');
     const $mainMenuBgScene = $('#mainMenuBgScene');
+    let indexMenuIsAnimating = false;
+
     const $introHeaderBackground = $('#introHeaderBackground');
     const $window = $(window);
     const $document = $(document);
@@ -21,7 +23,7 @@ $(function () {
     const $projectGallery = $('#projectGallery');
     const $projectsMenu = $('#projectsMenu');
     const $variettaGallery = $('#variettaGallery');
-    
+
     const $backButton = $('#backButton');
     const $mainHeaderNav = $('#mainHeaderNav')
     const $scrollWrapper = $('.scrollbar-wrapper');
@@ -43,7 +45,7 @@ $(function () {
     let windoHeight;
     $window.on('resize', onWindowResize);
 
-    $document.on('mousewheel', '.index-menu-container', onIndexMenuScroll);
+    $document.on('mousewheel', '#indexMenu', /* '.index-menu-container'*/ onIndexMenuScroll);
     $document.on('mousewheel', '.main-menu', onMainMenuScroll);
     $document.on('mousewheel', '.agibalov-portfolio-menu', onPortfolioMenuScroll);
 
@@ -52,7 +54,12 @@ $(function () {
 
     $document.on('click', '.nav-menu-btn', navMenuBtnClick);
     $document.on('click', '.search-toggle-btn', toggleSearchBlock);
-    $document.on('click', '.portfolio-menu_toggler-btn', togglePortfolioMenu);
+    // $document.on('click', '.portfolio-menu_toggler-btn', togglePortfolioMenu);
+    $(".portfolio-menu_toggler-btn").swipe(togglePortfolioMenu);
+    $(".projects-list-container").swipe(togglePortfolioMenu);
+
+
+
     $document.on('click', '.btn-back', onBackBtnClick)
 
     onWindowResize();
@@ -64,7 +71,7 @@ $(function () {
         if ($introHeaderBackground.length > 0) {
             new Parallax($introHeaderBackground[0]);
         }
-        
+
         if ($scrollWrapper.length > 0) {
             SimpleScrollbar.initEl($scrollWrapper.get(0));
             $('.ss-content').on('scroll', pageScroll)
@@ -81,35 +88,46 @@ $(function () {
         }
 
         if ($projectGallery.length > 0) {
-            $('.project-gallery_img-link').simpleLightbox({ /* options */ });
+            $('.project-gallery_img-link').simpleLightbox({
+                /* options */ });
         }
         if ($variettaGallery.length > 0) {
-            $('.varietta-page_gallery-link').simpleLightbox({ /* options */ });
+            $('.varietta-page_gallery-link').simpleLightbox({
+                /* options */ });
         }
 
-        /*if ($body.hasClass(PORTFOLIO_MENU_OPENED_FROM_START_CLASS)) {
-            console.log(window.location)
-            if (window.location.search.indexOf('from') > -1) {
-                $backButton.find('.btn-back').attr('href', window.location.search.split('=')[1] + '.html')
-            }
-        }*/
+        /* $indexMenuList.each(function (i, element) {
+             $(element).on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function (e) {
+                 setTimeout(function () {
+                     indexMenuIsAnimating = false;
+                     console.log('@@@@@@@@')
+                 }, 300);
+             })
+         })*/
 
     }
 
-    window.togglePortfolioMenu = togglePortfolioMenu;
+    function togglePortfolioMenu(direction) {
 
-    function togglePortfolioMenu() {
+        if ($body.hasClass(PORTFOLIO_MENU_OPENED_FROM_START_CLASS)) {
+            return;
+        }
+        if (direction === 'left' && !$body.hasClass(PORTFOLIO_MENU_OPENED_CLASS)) {
+            $body.addClass(PORTFOLIO_MENU_OPENED_CLASS)
+        }
+        if (direction === 'right' && $body.hasClass(PORTFOLIO_MENU_OPENED_CLASS)) {
+            $body.removeClass(PORTFOLIO_MENU_OPENED_CLASS)
+        }
 
-        $('body').toggleClass(PORTFOLIO_MENU_OPENED_CLASS)
+
     }
 
     function onBackBtnClick(e) {
         e.preventDefault();
         if ($body.hasClass(PORTFOLIO_MENU_OPENED_CLASS) && !$body.hasClass(PORTFOLIO_MENU_OPENED_FROM_START_CLASS)) {
-           
-            togglePortfolioMenu()
-        }
-        else {
+
+            togglePortfolioMenu('right')
+        } else {
             window.history.back()
         }
     }
@@ -279,7 +297,49 @@ $(function () {
         if (!isIndexMenuScrollable) {
             return
         }
+        if (indexMenuIsAnimating) {
+            return;
+        }
+
         let deltaX = e.originalEvent.deltaX;
+
+        if (e.originalEvent.deltaY !== 0 && Math.abs(e.originalEvent.deltaY) > Math.abs(e.originalEvent.deltaX)) {
+            deltaX = e.originalEvent.deltaY
+        }
+
+
+        direction = deltaX / Math.abs(deltaX);
+        indexMenuIsAnimating = true;
+
+        console.log('111', direction)
+
+        $indexMenuList.each(function (i, element) {
+            const $element = $(element);
+            //const newShift = (element.shift || 0) + deltaX * element.speed;
+            /* $element.css({
+                 'transform': "translate3d(" + direction * element.maxShift + "px, 0, 0)"
+             })*/
+            $element.css('margin-left', `${direction * element.maxShift}px`);
+        })
+        setTimeout(function () {
+            indexMenuIsAnimating = false;
+            console.log('@@@@@@@@')
+        }, 1000);
+
+        /*if (direction < 0) {
+            if (projectsCurrentSlide + 1 >= projectsPhotoListLength) {
+                return;
+            }
+            projectsCurrentSlide++;
+        } else {
+            if (projectsCurrentSlide - 1 < 0) {
+                return;
+            }
+            //if (!topIsReached($currentSlide)) return;
+            projectsCurrentSlide--;
+        }*/
+
+        /*let deltaX = e.originalEvent.deltaX;
 
         if (e.originalEvent.deltaY !== 0 && Math.abs(e.originalEvent.deltaY) > Math.abs(e.originalEvent.deltaX)) {
             deltaX = e.originalEvent.deltaY
@@ -298,7 +358,7 @@ $(function () {
 
                 $element.css('margin-left', `${element.shift}px`);
             })
-        }
+        }*/
     }
 
     function onIndexMenuListItemLinkHover(e) {
