@@ -12,7 +12,6 @@ $(function () {
     const $mainMenuBgScene = $('#mainMenuBgScene');
     let indexMenuIsAnimating = false;
 
-    const $introHeaderBackground = $('#introHeaderBackground');
     const $window = $(window);
     const $document = $(document);
     const $body = $('body');
@@ -68,9 +67,6 @@ $(function () {
 
     function init() {
         new Parallax($mainMenuBgScene[0]);
-        if ($introHeaderBackground.length > 0) {
-            new Parallax($introHeaderBackground[0]);
-        }
 
         if ($scrollWrapper.length > 0) {
             SimpleScrollbar.initEl($scrollWrapper.get(0));
@@ -157,6 +153,15 @@ $(function () {
                     top: 260 + scrollTop + 'px'
                 });
             }
+        }
+
+        if ($body.hasClass('agibalov-intro-page')) {
+            if (scrollTop > 600) {
+                $header.addClass('header-scrolled')
+            } else {
+                $header.removeClass('header-scrolled')
+            }
+
         }
 
     }
@@ -311,19 +316,18 @@ $(function () {
         direction = deltaX / Math.abs(deltaX);
         indexMenuIsAnimating = true;
 
-        console.log('111', e)
 
         $indexMenuList.each(function (i, element) {
             const $element = $(element);
+            const sign = i === 1 ? -1 : 1;
             //const newShift = (element.shift || 0) + deltaX * element.speed;
             /* $element.css({
                  'transform': "translate3d(" + direction * element.maxShift + "px, 0, 0)"
              })*/
-            $element.css('margin-left', `${direction * element.maxShift}px`);
+            $element.css('margin-left', `${sign * direction * element.maxShift}px`);
         })
         setTimeout(function () {
             indexMenuIsAnimating = false;
-            console.log('@@@@@@@@')
         }, 1000);
 
         /*if (direction < 0) {
