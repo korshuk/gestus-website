@@ -328,7 +328,7 @@ $(function () {
         })
         setTimeout(function () {
             indexMenuIsAnimating = false;
-        }, 1000);
+        }, 2000);
 
         /*if (direction < 0) {
             if (projectsCurrentSlide + 1 >= projectsPhotoListLength) {
