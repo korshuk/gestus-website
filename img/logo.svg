@@ -4,7 +4,7 @@
         <![CDATA[
 			@font-face {
 			font-family: Delicious;
-			src: url('../fonts/FuturaNewDemi-Reg.woff');
+			src: url('/fonts/FuturaNewDemi-Reg.woff');
 			}
       ]]>
     
